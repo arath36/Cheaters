@@ -1,6 +1,6 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
-#define Hash_Table_Size 10
+#define Hash_Table_Size 1000003
 
 #include <string>
 #include <array>
@@ -15,6 +15,14 @@ class HashTable {
   int numberOfDocs;
   vector <int>* hashTable[Hash_Table_Size];
 
+  struct Collision {
+        int index1;
+        int index2;
+        int numCollisions;
+      
+  };
+  
+
    
 
  
@@ -24,9 +32,11 @@ class HashTable {
    ~HashTable();    
 
    // this could cause seg faults, so beware
+   void hashVector(int docNumber, int wordCount, vector<string> &collisions);
    void hashToTable(int docNumber, string text);
    int hash(string text);
    void showCollisions();
+   void populateCollisions();
 
 
 
