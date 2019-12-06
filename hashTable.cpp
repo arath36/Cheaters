@@ -88,8 +88,8 @@ int HashTable::hash(string text) {
 }
 
 
-void HashTable::showCollisions() {
-    /* 
+ vector<HashTable::Collision> HashTable::showCollisions(int lowerBound) {
+    
     for (int i = 0; i < numberOfDocs; i++) {
         for (int j=0; j < numberOfDocs; j++) {
             cout << hashMap[i][j] << " ";
@@ -97,16 +97,26 @@ void HashTable::showCollisions() {
         cout << endl;
 
     }
-    */
+    
+
+   vector<Collision> collisionsVector;
 
    for (int i = 0; i<numberOfDocs; i++) {
        for (int j=0; j<numberOfDocs; j++) {
            int collisions = hashMap[i][j];
-           if (collisions > 350) {
-               cout << collisions << ": Index " << i << " " << j << endl;
+           if (collisions > lowerBound) {
+               Collision c = Collision();
+               c.index1 = i;
+               c.index2 = j;
+               c.numCollisions = collisions;
+               collisionsVector.push_back(c);
            }
        }
    }
+
+   return collisionsVector;
+
+
 
 
 }

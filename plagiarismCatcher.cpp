@@ -17,14 +17,14 @@ string capitalizeString (string input);
 // make sure the names of the files don't include the . && ..
 // confirm w TA what t
 
-int main()
-{
+int main(int argc, char *argv[]) {
 
     // need to change this to get a string from the user input
-    string dir = string("sm_doc_set");
+    string dir = argv[1];
     vector<string> files = vector<string>();
 
-    int checkLength = 7;
+    int checkLength = atoi(argv[2]);
+    int collisionBound = atoi(argv[3]);
 
     int result = getdir(dir,files);
 
@@ -43,10 +43,9 @@ int main()
     HashTable hashTable(files.size());
 
    for (unsigned int i = 0;i < files.size();i++) {
-            cout << files[i] << endl;
             vector<string> fileText;
             ifstream textFile;
-            string path = "sm_doc_set/" + files[i] ;
+            string path = dir + "/" + files[i] ;
             textFile.open(path);
             string text;
             
@@ -86,7 +85,11 @@ int main()
 
     hashTable.populateCollisions();
 
-    hashTable.showCollisions();
+    vector<HashTable::Collision> collisions = hashTable.showCollisions(collisionBound);
+
+    for (int k = 0; k < collisions.size(); k++) {
+        cout << collisions[k].numCollisions << ": " << files[collisions[k].index1] << ", " << files[collisions[k].index2] << endl;
+    }
 
     
     return 0;
