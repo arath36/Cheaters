@@ -15,12 +15,12 @@ int getdir (string dir, vector<string> &files);
 string capitalizeString (string input);
 
 // make sure the names of the files don't include the . && ..
-// confirm w TA what t
 
 int main(int argc, char *argv[]) {
 
-    // need to change this to get a string from the user input
+    // get user input
     string dir = argv[1];
+    // vector for all the filenames
     vector<string> files = vector<string>();
 
     int checkLength = atoi(argv[2]);
@@ -42,20 +42,25 @@ int main(int argc, char *argv[]) {
 
     HashTable hashTable(files.size());
 
+    // loops & hashes all the text files
+
    for (unsigned int i = 0;i < files.size();i++) {
+        
             vector<string> fileText;
             ifstream textFile;
             string path = dir + "/" + files[i] ;
             textFile.open(path);
             string text;
             
-        
+            // puts all the words capitalized into a vector
             while (!textFile.eof()) {
                 textFile >> text;
                 text = capitalizeString(text);
                // cout << text;
                 fileText.push_back(text);
             }
+
+            // hashes the vector
             hashTable.hashVector(i, checkLength, fileText );
             // the file is in a string vector
 
@@ -82,10 +87,30 @@ int main(int argc, char *argv[]) {
             textFile.close();
             
     }
-
+    // takes the hashed vectors and calculates the collisions
     hashTable.populateCollisions();
 
+    // gets and prints out the collisions
     vector<HashTable::Collision> collisions = hashTable.showCollisions(collisionBound);
+    int switches = 1;
+
+    while (switches != 0) {
+        switches = 0;
+        for (int k = 0; k < collisions.size()-1; k++) {
+
+              if (collisions[k].numCollisions < collisions[k+1].numCollisions) {
+            // we swap them 
+                HashTable::Collision temp = collisions [k+1];
+                collisions[k+1] = collisions[k];
+                collisions[k] = temp;
+
+                switches++;
+
+            }
+        
+        }
+    }
+    
 
     for (int k = 0; k < collisions.size(); k++) {
         cout << collisions[k].numCollisions << ": " << files[collisions[k].index1] << ", " << files[collisions[k].index2] << endl;
